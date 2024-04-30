@@ -5,7 +5,7 @@ import Modal from 'react-bootstrap/Modal';
 import Badge from 'react-bootstrap/Badge';
 import Alert from 'react-bootstrap/Alert';
 
-function ModalConnectDevice({gatewayID, saved}) {
+function ModalConnectDevice({gatewayID, change, saved}) {
 
   const [show, setShow] = useState(false);
 
@@ -16,10 +16,11 @@ function ModalConnectDevice({gatewayID, saved}) {
   const [isEmpty, setIsEmpty] =  useState(true);
   const [validated, setValidated] = useState(false);
   const [devices, setDevices] = useState(null);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState(null);
   const [device, setDevice] = useState(
     {
-      id: ''
+      id: '',
+      distance: 0
     }
   );
 
@@ -46,33 +47,35 @@ function ModalConnectDevice({gatewayID, saved}) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        deviceID: device.id
+        deviceID: device.id,
+        distance: device.distance
       })
     });
 
+    const rawData = await response.json();
+
     if (response.ok) {
-      const rawData = await response.json();
       console.log(rawData);
-      setError(false)
-      setIsLoading(false);
-      return false;
-    }
-    else {
-      setError(true)
+      setError(null);
       setIsLoading(false);
       return true;
+    }
+    else {
+      setError(rawData.error)
+      setIsLoading(false);
+      return false;
     }
   }
 
   const handleSave = () => {
-      saved(true);
+      saved(!change);
       handleClose();
   };
 
   async function connectDevice() {   
-    if(device.id !== '' )
+    if(device.id !== '' && device.distance != 0)
     {
-      if(!await fetchConnect()) {
+      if(await fetchConnect()) {
         handleSave();
       }
     }
@@ -87,13 +90,7 @@ function ModalConnectDevice({gatewayID, saved}) {
     });
   };
 
-  const handleSubmit = (event) => {
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-    
+  const handleSubmit = () => {
     setValidated(true);
     connectDevice();   
   };
@@ -145,22 +142,37 @@ function ModalConnectDevice({gatewayID, saved}) {
 
                   {devices.map((device) => (
                     <option value={device.id}>
-                      {device.name}
-                      <Badge bg="primary">{device.physicalProtocol}</Badge>
+                      {device.name} <p>Protocol: {device.physicalProtocol}</p>
                     </option>
                   ))}
                 </Form.Select>
               </Form.Group>
+              <Form.Group>
+              <Form.Label>Расстояние до устройства</Form.Label>
+                <Form.Control
+                  required
+                  type="number"
+                  placeholder="метры"
+                  name="distance"
+                  value={device.distance}
+                  onChange={handleChange}
+                  min="1"
+                />
+                <Form.Control.Feedback type="invalid">
+                  Укажите расстояние!
+                </Form.Control.Feedback>
+              </Form.Group>
             </Form>
           )}
-          {error && (
-            <Alert variant="danger">
-              <Alert.Heading>Произошла ошибка при подключении</Alert.Heading>
+          {error !== null && (
+            <Alert variant="danger" onClose={() => setError(null)} dismissible>
+            <Alert.Heading>Произошла ошибка при подключении</Alert.Heading>
               <p>
-                Проверьте, совпадают ли протоколы и поддерживаемые версии устройства и шлюза.
+                {error}
               </p>
-            </Alert>
+          </Alert>
           )}
+          
         </Modal.Body>
         {!isEmpty && (
           <Modal.Footer>

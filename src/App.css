@@ -51,7 +51,19 @@
   justify-content: space-between;
 }
 
-/* .section {
-  border-block: solid black;
-  padding: 20px;
-} */
+
+.addingButton {
+  position: absolute;
+  bottom: 15px;
+  font-size: 36px;
+  font-weight: 700;
+}
+
+.deviceValue {
+  font-size: 36px;
+  font-weight: 700;
+}
+
+.errorAlert {
+  top:auto
+}

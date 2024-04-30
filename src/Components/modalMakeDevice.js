@@ -37,7 +37,6 @@ function ModalDevice(props) {
 
     if(nameRegExp.test(values.name))
     {
-      console.log(values);
       handleClose();
       setParams(values);
     }
@@ -46,9 +45,16 @@ function ModalDevice(props) {
 
   return (
     <>
+      {props.mode && 
       <Button variant="primary" onClick={handleShow}>
         Создать устройство
       </Button>
+      }
+      {!props.mode && 
+      <Button className="rounded-circle addingButton" onClick={handleShow}>
+        +
+      </Button>
+      }
 
       <Modal size="lg" show={show} onHide={handleClose}>
         <Modal.Header closeButton>
@@ -60,6 +66,7 @@ function ModalDevice(props) {
               <Form.Label>Имя устройства</Form.Label>
               <Form.Control
                 required 
+                autocomplete="off"
                 type="text" 
                 name="name"                                
                 value={values.name}
@@ -70,7 +77,7 @@ function ModalDevice(props) {
                   validated &&
                   !nameRegExp.test(values.name)
                 } 
-                autoFocus />
+                autoFocus/>
               <Form.Control.Feedback type="invalid">Введите корректное имя!</Form.Control.Feedback>
             </Form.Group>
             <Form.Group

@@ -25,7 +25,8 @@ function ModalGateway({saved}) {
   const [values, setValues] = useState({
     name: "",
     type: "ethernet",
-    versions: []
+    versions: [],
+    opRange: 0
   });
 
   const [showVersions, setShowVersions] = useState(false)
@@ -93,7 +94,8 @@ function ModalGateway({saved}) {
         },
         body: JSON.stringify({
           name: values.name,
-          versions: values.versions
+          versions: values.versions,
+          opRange: values.opRange
         }),
       }
     );
@@ -110,7 +112,7 @@ function ModalGateway({saved}) {
   };
 
   async function MakeGateway() {   
-    if(nameRegExp.test(values.name) && !invalidSwitches)
+    if(nameRegExp.test(values.name) && !invalidSwitches && values.opRange !=0)
     {
       values.versions = choosenVer;
       await fetchMakeGateway()
@@ -207,9 +209,23 @@ function ModalGateway({saved}) {
                     />
                 ))}
                 {invalidSwitches && <div style={{color: '#dc3545'}}>Выберите хотя бы один враиант</div>}
-                
               </Form.Group>
             )}
+            <Form.Group>
+              <Form.Label>Дальность работы</Form.Label>
+                <Form.Control
+                  required
+                  type="number"
+                  placeholder="метры"
+                  name="opRange"
+                  value={values.opRange}
+                  onChange={handleChange}
+                  min="1"
+                />
+                <Form.Control.Feedback type="invalid">
+                  Укажите дальность работы
+                </Form.Control.Feedback>
+              </Form.Group>
           </Form>}
         </Modal.Body>
         <Modal.Footer>

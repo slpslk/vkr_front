@@ -1,10 +1,12 @@
 import React,{ useState, useEffect } from 'react';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
+import Stack from 'react-bootstrap/Stack';
 import ModalGateway from './modalMakeGateway.js';
 import GatewayCard from './gatewayCard.js';
 
-//TODO: открывание окна создания устройства заново
+//TODO: открывание окна создания шлюза заново
+//TODO: передавать isempty в карточки, чтобы отслеживать пустой массив....
 
 function GatewaysPage() {
 
@@ -37,9 +39,13 @@ function GatewaysPage() {
     console.log(gateways)
   }, [gateways]);
 
+  async function test() {
+    await fetchGateways();
+  }
 
   React.useEffect(() => { 
-    fetchGateways()   
+    test()
+    console.log(gateways)
   }, [gatewaysIsChanged]);
 
 
@@ -55,10 +61,12 @@ function GatewaysPage() {
       )}
       {!isLoading && !gatewaysIsEmpty && (
         <>
-          <Row>
-            <Col>
-              <GatewayCard gateway={gateways[0]}/>
-            </Col>
+        <Row>
+            {gateways.map((curr) => (
+              <Col className="mb-3">
+                <GatewayCard gateway={curr} change={gatewaysIsChanged} deleted={setIsChanged} />
+              </Col>
+            ))}
           </Row>
         </>
       )}

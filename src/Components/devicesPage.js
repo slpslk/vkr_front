@@ -1,6 +1,8 @@
 import React,{ useState, useEffect } from 'react';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
+import Alert from 'react-bootstrap/Alert';
+import Button from 'react-bootstrap/Button';
 import ModalDevice from "../Components/modalMakeDevice.js";
 import ModalDevicesSwitch from './modalDevicesSwitch.js';
 import DeviceCard from './deviceCard.js';
@@ -18,6 +20,7 @@ function DevicePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [devicesIsEmpty, setDevicesIsEmpty] = useState(true);
   const [devicesIsChanged, setIsChanged] = useState(false);
+  const [deviceError, setDeviceError] = useState(null);
 
   async function fetchDevices() {
     setIsLoading(true);
@@ -40,38 +43,60 @@ function DevicePage() {
     else {
       setDevicesIsEmpty(false);
     }
-    console.log(devices)
   }, [devices]);
 
 
-  // React.useEffect(() => { 
-  //   fetchDevices()   
-  // }, [devicesIsChanged]);
+  React.useEffect(() => { 
+    fetchDevices()   
+  }, [devicesIsChanged]);
 
 
 
   return (
     <>
       {isLoading && <div>Loading...</div>}
-      {!isLoading && devicesIsEmpty &&
+      {!isLoading && devicesIsEmpty && (
         <div className="empty">
           Вы не создали ни одного устройства
-          <ModalDevice method={setCreatingParams} />
-          <ModalDevicesSwitch name={creatingParams.name} type={creatingParams.type} saved={setIsChanged}/>
+          <ModalDevice mode={devicesIsEmpty} method={setCreatingParams} />
+          <ModalDevicesSwitch
+            reset={setCreatingParams}
+            name={creatingParams.name}
+            type={creatingParams.type}
+            change={devicesIsChanged}
+            saved={setIsChanged}
+          />
         </div>
-      }
+      )}
 
-      {!isLoading && !devicesIsEmpty &&
+      {!isLoading && !devicesIsEmpty && (
         <>
           <Row>
-            <Col><DeviceCard device={devices[0]}/></Col>
-
+            {devices.map((curr) => (
+              <Col className="mb-3">
+                <DeviceCard device={curr} error={setDeviceError} />
+              </Col>
+            ))}
           </Row>
 
+          {deviceError !== null &&
+            <Alert style={{position: 'absolute', right: "20px", bottom: "0px"}} variant="danger" onClose={() => setDeviceError(null)} dismissible>
+              <Alert.Heading>Произошла ошибка при подключении</Alert.Heading>
+                <p>
+                  {deviceError}
+                </p>
+            </Alert>
+          }
+          <ModalDevice mode={devicesIsEmpty} method={setCreatingParams} />
+          <ModalDevicesSwitch
+            reset={setCreatingParams}
+            name={creatingParams.name}
+            type={creatingParams.type}
+            change={devicesIsChanged}
+            saved={setIsChanged}
+          />
         </>
-
-      }
-
+      )}
     </>
   );
 }

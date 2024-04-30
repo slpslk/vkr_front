@@ -5,6 +5,8 @@ import Modal from 'react-bootstrap/Modal';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Badge from 'react-bootstrap/Badge';
 import Stack from 'react-bootstrap/Stack';
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
 import ModalConnectDevice from './modalConnectDevice.js';
 
 
@@ -19,6 +21,7 @@ function ModalGatewayDevices({gatewayID}) {
   const [isEmpty, setIsEmpty] = useState(true);
   const [isChanged, setIsChanged] = useState(false);
   const [showConnect, setShowConnect] = useState(false);
+  const [deletingDevice, setDeletingDevice] = useState();
   
   async function fetchGatewayDevices() {
     setIsLoading(true);
@@ -35,9 +38,28 @@ function ModalGatewayDevices({gatewayID}) {
     setIsLoading(false);
   }
 
-  const handleClick = () => {
-    setShowConnect(true);
-    handleClose()
+  async function deleteGatewayDevice(deviceId) {
+    setIsLoading(true);
+    const response = await fetch(`http://localhost:8000/api/gateways/${gatewayID}/delete`, {
+      method: "DELETE",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        deviceID: deviceId
+      })
+    });
+
+      const rawData = await response.json();
+      console.log(rawData);
+
+  }
+
+  async function handleDelete (event) {
+    const value = event.target.value;
+    console.log(value);
+    await deleteGatewayDevice(value);
+    setIsChanged(!isChanged);
   };
 
   useEffect(() => { 
@@ -52,6 +74,7 @@ function ModalGatewayDevices({gatewayID}) {
 
   useEffect(() => { 
     fetchGatewayDevices()
+    console.log("вызвалось")
   }, [isChanged]);
 
   return (
@@ -74,17 +97,26 @@ function ModalGatewayDevices({gatewayID}) {
               {isEmpty && (
                 <Stack gap={2} className="col-md-5 mx-auto">
                   <Form.Label>Нет подключенных устройств</Form.Label>
-                  <ModalConnectDevice gatewayID={gatewayID} saved={setIsChanged}/>
+                  <ModalConnectDevice gatewayID={gatewayID} change={isChanged} saved={setIsChanged}/>
                 </Stack>
               )}
               {!isEmpty && (
                 <ListGroup style={{ overflow: "auto", height: "200px" }}>
                   {gatewayDevices.map((device) => (
                     <ListGroup.Item>
-                      {device.name}
-                      <Badge style={{}} bg="primary">
-                        {device.physicalProtocol}
-                      </Badge>
+                      <Row className='align-items-center'>
+                        <Col sm="3">
+                          {device.name}
+                          <Badge className='ms-3' bg="primary">
+                            {device.physicalProtocol}
+                          </Badge>
+                        </Col>
+                        <Col >
+                          <Button size="sm" variant="danger" value={device.id} onClick={handleDelete} >
+                            Удалить
+                          </Button>
+                        </Col>
+                      </Row>
                     </ListGroup.Item>
                   ))}
                 </ListGroup>

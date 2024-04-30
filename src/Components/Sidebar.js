@@ -37,8 +37,8 @@ const Sidebar = () => {
             <NavLink exact to="/gateways" activeClassName="activeClicked">
               <CDBSidebarMenuItem icon="table">Tables</CDBSidebarMenuItem>
             </NavLink>
-            <NavLink exact to="/mqtt" activeClassName="activeClicked">
-              <CDBSidebarMenuItem icon="user">MQTT</CDBSidebarMenuItem>
+            <NavLink exact to="/settings" activeClassName="activeClicked">
+              <CDBSidebarMenuItem icon="user">Настройки</CDBSidebarMenuItem>
             </NavLink>
             <NavLink exact to="/analytics" activeClassName="activeClicked">
               <CDBSidebarMenuItem icon="chart-line">Analytics</CDBSidebarMenuItem>

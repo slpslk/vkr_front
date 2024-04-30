@@ -4,10 +4,31 @@ import Card from 'react-bootstrap/Card';
 // import ModalSettings from './modalSettings.js';
 import ModalGatewayDevices from './modalGatewayDevices.js';
 
-function GatewayCard({gateway}) {
+function GatewayCard({gateway, change, deleted}) {
 
-  const handleAdding = (event) => {
+  const [isLoading, setIsLoading] = useState(false);
 
+  async function deleteGateway() {
+    setIsLoading(true);
+    const response = await fetch(`http://localhost:8000/api/gateways`, {
+      method: "DELETE",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        gatewayID: gateway.id
+      })
+    });
+
+      const rawData = await response.json();
+      console.log(rawData);
+
+      setIsLoading(false);
+  }
+
+  const handleDelete = () => {
+    deleteGateway();
+    deleted(!change)
   };
 
   return (
@@ -26,6 +47,7 @@ function GatewayCard({gateway}) {
           <Button 
             className="ms-2"
             variant="danger"
+            onClick={handleDelete}
           >
             Удалить
           </Button>
