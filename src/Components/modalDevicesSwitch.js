@@ -9,7 +9,7 @@ function ModalDevicesSwitch({reset, name, type, change, saved, error}) {
   const [typeKind, setTypeKind] = useState('')
 
   useEffect(() => {
-    if (type == 'temperature' || type == 'humidity') {
+    if (type == 'temperature' || type == 'humidity' || type == 'gas' || type == 'lighting' ) {
       setTypeKind('sensor')
     }
     else {
@@ -19,9 +19,9 @@ function ModalDevicesSwitch({reset, name, type, change, saved, error}) {
 
   return (
     <>
-      <SensorWrapper type={type}/>
+      
       <CustomSwitch value={typeKind}>
-        <CustomCase value='sensor'><ModalTemperatureSensor reset={reset} name = {name} change={change} saved ={saved} error={error}/></CustomCase>
+        <CustomCase value='sensor'><SensorWrapper type={type} reset={reset} name={name} change={change} saved ={saved}/></CustomCase>
         <CustomCase value="20">Hello 20</CustomCase>
         <CustomCase value="30">Hello 30</CustomCase>
         <CustomCase value="10"><div>Hello 10</div></CustomCase>

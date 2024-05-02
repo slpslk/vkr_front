@@ -29,8 +29,12 @@ function GatewaysPage() {
     setIsLoading(false);
   }
 
-  React.useEffect(() => { 
-    if (gateways === null) {
+  const deleteGateway = (id) => {
+    setGateways(gateways.filter(gateway => gateway.id !== id))
+  }
+
+  useEffect(() => { 
+    if (gateways === null || gateways.length == 0) {
       setGatewaysIsEmpty(true);
     }
     else {
@@ -39,12 +43,12 @@ function GatewaysPage() {
     console.log(gateways)
   }, [gateways]);
 
-  async function test() {
+  async function getGateways() {
     await fetchGateways();
   }
 
-  React.useEffect(() => { 
-    test()
+  useEffect(() => { 
+    getGateways();
     console.log(gateways)
   }, [gatewaysIsChanged]);
 
@@ -56,7 +60,7 @@ function GatewaysPage() {
       {!isLoading && gatewaysIsEmpty && (
         <div className="empty">
           Вы не создали ни одного шлюза
-          <ModalGateway saved={setIsChanged} />
+          <ModalGateway mode={gatewaysIsEmpty} change={gatewaysIsChanged} saved={setIsChanged} />
         </div>
       )}
       {!isLoading && !gatewaysIsEmpty && (
@@ -64,10 +68,12 @@ function GatewaysPage() {
         <Row>
             {gateways.map((curr) => (
               <Col className="mb-3">
-                <GatewayCard gateway={curr} change={gatewaysIsChanged} deleted={setIsChanged} />
+                <GatewayCard gateway={curr} deleted={deleteGateway} />
               </Col>
             ))}
-          </Row>
+        </Row>
+
+        <ModalGateway mode={gatewaysIsEmpty} change={gatewaysIsChanged} saved={setIsChanged} />
         </>
       )}
     </>

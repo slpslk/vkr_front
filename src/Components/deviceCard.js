@@ -8,6 +8,8 @@ function DeviceCard({device, error}) {
 
   const notations = {
     temperature: "°",
+    humidity: "%",
+    lighting: "лк"
   }
   const [isLoading, setIsLoading] = useState(false);
   const [isDisabled, setIsDisabled] = useState(true);
@@ -18,7 +20,7 @@ function DeviceCard({device, error}) {
   async function turnOnDevice() {
     setIsLoading(true);
 
-    const response = await fetch(`http://localhost:8000/api/devices/temperature/${device.id}`, {
+    const response = await fetch(`http://localhost:8000/api/devices/${device.id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -44,7 +46,7 @@ function DeviceCard({device, error}) {
     setIsLoading(true);
 
     setTimeout (async () => {
-      const response = await fetch(`http://localhost:8000/api/devices/temperature/${device.id}/reconnect`, {
+      const response = await fetch(`http://localhost:8000/api/devices/${device.id}/reconnect`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -68,7 +70,7 @@ function DeviceCard({device, error}) {
   }
   
   async function fetchCurrentValue(refreshingFetch) {
-    const response = await fetch(`http://localhost:8000/api/devices/temperature/${device.id}`, {
+    const response = await fetch(`http://localhost:8000/api/devices/${device.id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'

@@ -2,9 +2,9 @@ import React,{ useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 // import ModalSettings from './modalSettings.js';
-import ModalGatewayDevices from './modalGatewayDevices.js';
+import ModalGatewaySettings from './modalGatewaySettings.js';
 
-function GatewayCard({gateway, change, deleted}) {
+function GatewayCard({gateway, deleted}) {
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -26,9 +26,9 @@ function GatewayCard({gateway, change, deleted}) {
       setIsLoading(false);
   }
 
-  const handleDelete = () => {
-    deleteGateway();
-    deleted(!change)
+  const handleDelete = async () => {
+    await deleteGateway();
+    deleted(gateway.id)
   };
 
   return (
@@ -37,7 +37,7 @@ function GatewayCard({gateway, change, deleted}) {
       <Card.Body>
         <Card.Title style={{ display: 'flex', justifyContent: 'space-between' }}>
           {gateway.name} 
-          <ModalGatewayDevices gatewayID={gateway.id}/>
+          <ModalGatewaySettings gateway={gateway}/>
           </Card.Title>
         <Card.Subtitle className="mb-2 text-muted">{gateway.type}</Card.Subtitle>
         <Card.Text>

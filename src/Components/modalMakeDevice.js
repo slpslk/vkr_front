@@ -93,6 +93,8 @@ function ModalDevice(props) {
                 >
                 <option selected value="temperature">Датчик температуры</option>
                 <option value="humidity">Датчик влажности</option>
+                <option value="lighting">Датчик освещенности</option>
+                <option value="gas">Датчик газа</option>
                 <option value="lamp">Лампа</option>
               </Form.Select>
               <Form.Control.Feedback type="invalid">Выберите тип!</Form.Control.Feedback>

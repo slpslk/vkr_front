@@ -5,7 +5,7 @@ import Modal from 'react-bootstrap/Modal';
 
 //TODO: очищение формы и значений
 
-function ModalGateway({saved}) {
+function ModalGateway({mode, change, saved}) {
 
   const [show, setShow] = useState(false);
 
@@ -107,7 +107,7 @@ function ModalGateway({saved}) {
   }
 
   const handleSave = () => {
-    saved(true);
+    saved(!change);
     handleClose();
   };
 
@@ -139,10 +139,16 @@ function ModalGateway({saved}) {
 
   return (
     <>
-    
+    {mode && 
       <Button variant="primary" onClick={handleShow}>
         Создать шлюз
       </Button>
+      }
+      {!mode && 
+      <Button className="rounded-circle addingButton" onClick={handleShow}>
+        +
+      </Button>
+      }
 
       <Modal size="lg" show={show} onHide={handleClose}>
         <Modal.Header closeButton>
@@ -211,6 +217,7 @@ function ModalGateway({saved}) {
                 {invalidSwitches && <div style={{color: '#dc3545'}}>Выберите хотя бы один враиант</div>}
               </Form.Group>
             )}
+            {/* if type!=""ethernet */}
             <Form.Group>
               <Form.Label>Дальность работы</Form.Label>
                 <Form.Control
