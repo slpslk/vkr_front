@@ -112,7 +112,7 @@ function ModalGateway({mode, change, saved}) {
   };
 
   async function MakeGateway() {   
-    if(nameRegExp.test(values.name) && !invalidSwitches && values.opRange !=0)
+    if(nameRegExp.test(values.name) && !invalidSwitches && (values.opRange !=0 || values.type == 'ethernet'))
     {
       values.versions = choosenVer;
       await fetchMakeGateway()
@@ -217,7 +217,7 @@ function ModalGateway({mode, change, saved}) {
                 {invalidSwitches && <div style={{color: '#dc3545'}}>Выберите хотя бы один враиант</div>}
               </Form.Group>
             )}
-            {/* if type!=""ethernet */}
+            {choosenProtocol!="ethernet" &&
             <Form.Group>
               <Form.Label>Дальность работы</Form.Label>
                 <Form.Control
@@ -233,6 +233,7 @@ function ModalGateway({mode, change, saved}) {
                   Укажите дальность работы
                 </Form.Control.Feedback>
               </Form.Group>
+              }
           </Form>}
         </Modal.Body>
         <Modal.Footer>

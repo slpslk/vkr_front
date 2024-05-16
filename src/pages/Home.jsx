@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Sidebar from "../Components/Sidebar.js";
 import Button from 'react-bootstrap/Button';
-import DevicePage from '../Components/devicesPage.js';
+import DevicePage from '../Components/devices/devicesPage.js';
 
 
 const Home = () => {

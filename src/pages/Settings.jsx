@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Sidebar from "../Components/Sidebar.js";
 import Button from 'react-bootstrap/Button';
-import SettingsPage from '../Components/settingsPage.js';
+import SettingsPage from '../Components/settings/settingsPage.js';
 
 
 const Settings = () => {

@@ -32,6 +32,7 @@
     /* max-width: 1260px; */
     padding: 0 25px;
     height: 100%;
+    width: 100%
 }
 
 .title {
@@ -43,8 +44,9 @@
 }
 
 .empty {
-  height: 80px;
-  margin: 20px 0;
+  font-size: 20px;
+  height: 100px;
+  margin-top: 15%;
   align-items: center;
   display: flex;
   flex-direction: column;
@@ -59,6 +61,11 @@
   font-weight: 700;
 }
 
+.powerButton {
+  height: 45px;
+  width: 45px;
+}
+
 .deviceValue {
   font-size: 36px;
   font-weight: 700;
@@ -67,3 +74,23 @@
 .errorAlert {
   top:auto
 }
+
+.fa {
+  font-size: larger;
+}
+
+.powerButton .fa {
+  position: absolute;
+  right: 28.5px;
+  top: 30px;
+}
+
+
+/* .form-check-input:valid.is-invalid {
+  border-color: var(--bs-form-invalid-border-color);
+  color: var(--bs-form-invalid-border-color);
+}
+
+.form-check-input:valid {
+  border-color: var(--bs-form-invalid-border-color);
+} */

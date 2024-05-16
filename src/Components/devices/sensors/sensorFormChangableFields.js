@@ -29,7 +29,8 @@ function SensorFormChangable({values, handleChange, type}) {
   const notations = {
     temperature: "C°",
     humidity: "%",
-    lighting: "люкс"
+    lighting: "люкс",
+    
   }
 
   const makeFields = () => {
@@ -44,11 +45,27 @@ function SensorFormChangable({values, handleChange, type}) {
 
   return (
     <>
-      {fieldsOfType.gasType && <Form.Label>Тип газа</Form.Label>}
+      {fieldsOfType.gasType && (
+        <>
+          
+          <Form.Group className="mb-3" controlId="gastype">
+          <Form.Label>Тип газа</Form.Label>
+            <Form.Select
+              required
+              name="gasType"
+              value={values.gasType}
+              onChange={handleChange}
+            >
+              <option value="true">Метан</option>
+              <option value="false">Углекислый газ</option>
+            </Form.Select>
+          </Form.Group>
+        </>
+      )}
       {fieldsOfType.range && (
         <Row>
           <Form.Label>Диапазон измерения</Form.Label>
-          <Col sm="4">
+          <Col>
             <Form.Group as={Row} className="mb-3">
               <Form.Label column sm="2">
                 Min:
@@ -69,6 +86,8 @@ function SensorFormChangable({values, handleChange, type}) {
                 </Form.Control.Feedback>
               </Col>
             </Form.Group>
+          </Col>
+          <Col>
             <Form.Group as={Row} className="mb-3">
               <Form.Label column sm="2">
                 Max:
@@ -94,10 +113,10 @@ function SensorFormChangable({values, handleChange, type}) {
       )}
       {fieldsOfType.error && (
         <Form.Group as={Row} className="mb-3">
-          <Form.Label column sm="6">
+          <Form.Label column sm="4 ">
             Величина погрешности:
           </Form.Label>
-          <Col sm="6">
+          <Col sm="8">
             <Form.Control
               required
               type="number"
@@ -116,12 +135,12 @@ function SensorFormChangable({values, handleChange, type}) {
         </Form.Group>
       )}
       <Row>
-        <Col sm="7">
+        <Col>
           <Form.Group as={Row} className="mb-3">
-            <Form.Label column sm="5">
+            <Form.Label column sm="3">
               Дальность работы:
             </Form.Label>
-            <Col sm="7">
+            <Col sm="9">
               <Form.Control
                 required
                 type="number"

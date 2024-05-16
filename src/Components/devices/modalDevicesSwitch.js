@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import {CustomSwitch, CustomCase, DefaultCase} from './CustomSwitch.js';
-import SensorWrapper from './sensorWrapper.js';
-import ModalTemperatureSensor from './makeTemp.js';
+import {CustomSwitch, CustomCase, DefaultCase} from '../CustomSwitch.js';
+import SensorWrapper from './sensors/sensorWrapper.js';
+import ControlledWrapper from './controlled/controlledWrapper.js';
 
 
 function ModalDevicesSwitch({reset, name, type, change, saved, error}) {
@@ -12,7 +12,7 @@ function ModalDevicesSwitch({reset, name, type, change, saved, error}) {
     if (type == 'temperature' || type == 'humidity' || type == 'gas' || type == 'lighting' ) {
       setTypeKind('sensor')
     }
-    else {
+    else if (type == 'lamp'){
       setTypeKind('controlled')
     }
   }, [type])
@@ -22,9 +22,7 @@ function ModalDevicesSwitch({reset, name, type, change, saved, error}) {
       
       <CustomSwitch value={typeKind}>
         <CustomCase value='sensor'><SensorWrapper type={type} reset={reset} name={name} change={change} saved ={saved}/></CustomCase>
-        <CustomCase value="20">Hello 20</CustomCase>
-        <CustomCase value="30">Hello 30</CustomCase>
-        <CustomCase value="10"><div>Hello 10</div></CustomCase>
+        <CustomCase value='controlled'><ControlledWrapper type={type} reset={reset} name={name} change={change} saved ={saved}/></CustomCase>
         <DefaultCase></DefaultCase>
       </CustomSwitch>
     </>

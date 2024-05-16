@@ -3,7 +3,7 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
-import ModalDevice from "../Components/modalMakeDevice.js";
+import ModalDevice from "./modalMakeDevice.js";
 import ModalDevicesSwitch from './modalDevicesSwitch.js';
 import DeviceCard from './deviceCard.js';
 
@@ -36,8 +36,12 @@ function DevicePage() {
     setIsLoading(false);
   }
 
-  React.useEffect(() => { 
-    if (devices === null) {
+  const deleteDevice = (id) => {
+    setDevices(devices.filter(device => device.id !== id))
+  }
+
+  useEffect(() => { 
+    if (devices === null || devices.length == 0) {
       setDevicesIsEmpty(true);
     }
     else {
@@ -74,7 +78,7 @@ function DevicePage() {
           <Row>
             {devices.map((curr) => (
               <Col className="mb-3">
-                <DeviceCard device={curr} error={setDeviceError} />
+                <DeviceCard device={curr} error={setDeviceError} change={devicesIsChanged} saved={setIsChanged} deleted={deleteDevice}/>
               </Col>
             ))}
           </Row>

@@ -1,12 +1,13 @@
-import React,{ useState, useEffect } from 'react';
+import React,{ useState, useEffect, version } from 'react';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 // import ModalSettings from './modalSettings.js';
 import ModalGatewaySettings from './modalGatewaySettings.js';
 
-function GatewayCard({gateway, deleted}) {
+function GatewayCard({gateway, deleted, change, saved}) {
 
   const [isLoading, setIsLoading] = useState(false);
+
 
   async function deleteGateway() {
     setIsLoading(true);
@@ -37,11 +38,13 @@ function GatewayCard({gateway, deleted}) {
       <Card.Body>
         <Card.Title style={{ display: 'flex', justifyContent: 'space-between' }}>
           {gateway.name} 
-          <ModalGatewaySettings gateway={gateway}/>
+          <ModalGatewaySettings gateway={gateway} change={change} saved={saved}/>
           </Card.Title>
         <Card.Subtitle className="mb-2 text-muted">{gateway.type}</Card.Subtitle>
         <Card.Text>
-          <div>Поддерживаемые версии: {gateway.versions}</div>
+          {gateway.type != 'ethernet' &&
+            <div>Поддерживаемые версии: {gateway.versions.join(', ')}</div>
+          }
         </Card.Text>
         <div style={{  display: 'flex', alignItems: 'flex-end' }}>
           <Button 

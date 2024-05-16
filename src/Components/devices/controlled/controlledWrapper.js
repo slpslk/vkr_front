@@ -1,61 +1,34 @@
 import { useState, useEffect } from 'react';
-import SensorModalForm from './sensorModalForm.js';
+import ControlledModalForm from './controlledModalForm.js';
 
 
-function SensorWrapper({type, reset, name, change, saved}) {
+function ControlledWrapper({type, reset, name, change, saved}) {
 
   const typeValues = {
-    temperature: {
-      min: '',
-      max: '',
-      operatingRange: '',
-      error: '',
-    },
-    humidity: {
-      min: '',
-      max: '',
-      operatingRange: '',
-      error: '',
-    },
-    lighting : {
-      min: '',
-      max: '',
-      operatingRange: '',
-      error: '',
-    },
+    
   }
 
   const [values, setValues] = useState({
     name: name,
-    place: true,
     sendingPeriod: '',
     protocolPhysical: 'ethernet',
     protocolVersions: [],
     protocolMessage: 'MQTT',
+    broker: 'rightech',
+    operatingRange: '',
     ClientID: '',
     mqttPassword: '',
     mqttUsername: '',
     mqttTopic: '',
-    mqttQoS: 0
   });
   
-  const handleTypeChange = (fields) => {
-    for (var key in fields) {
-      values[key] = fields[key]
-    }
-  }
+  // const handleTypeChange = (fields) => {
+  //   for (var key in fields) {
+  //     values[key] = fields[key]
+  //   }
+  // }
 
-  async function fetchMakeSensor() {
-
-    // requestData.name,
-    // requestData.place,
-    // requestData.meanTimeFailure,
-    // requestData.protocol,
-    // requestData.connectionOptions,
-    // requestData.measureRange,
-    // requestData.sendingPeriod,
-    // requestData.weatherAPI
-
+  async function fetchMakeControlled() {
     const response = await fetch(`http://localhost:8000/api/devices/${type}`, {
         method: "POST",
         headers: {
@@ -63,18 +36,12 @@ function SensorWrapper({type, reset, name, change, saved}) {
         },
         body: JSON.stringify({
           name: values.name,
-          place: values.place,
           meanTimeFailure: values.meanTimeFailure,
           protocol: { 
             physical: values.protocolPhysical,
             message: values.protocolMessage,
-            versions: values.protocolVersions
-          },
-          measureRange: {
-            min: values.min,
-            max: values.max,
-            error: values.error,
-            opRange: values.operatingRange,
+            versions: values.protocolVersions,
+            broker: values.broker,
           },
           sendingPeriod: values.sendingPeriod,
           connectionOptions: {
@@ -82,9 +49,8 @@ function SensorWrapper({type, reset, name, change, saved}) {
             username: values.mqttUsername,
             password: values.mqttPassword,
             sendingTopic: values.mqttTopic,
-            QoS: values.mqttQoS
-          }
-
+          },
+          opRange: values.operatingRange
         }),
       }
     );
@@ -95,7 +61,6 @@ function SensorWrapper({type, reset, name, change, saved}) {
 
   const handleCreating = () => {
     saved(!change);
-    // handleClose();
     reset({
       name: "",
       type: "",
@@ -106,21 +71,21 @@ function SensorWrapper({type, reset, name, change, saved}) {
   const handleSubmit = () => {
 
 // запись параметров в пропсы
-    fetchMakeSensor();
+    fetchMakeControlled();
     handleCreating();     
     console.log(values)
   };
 
-  useEffect(() => {
-    const changeableFields = typeValues[type]
-    handleTypeChange(changeableFields)
+  // useEffect(() => {
+  //   const changeableFields = typeValues[type]
+  //   handleTypeChange(changeableFields)
     
-  }, [type] )
+  // }, [type] )
 
 
   return (
     <>
-      <SensorModalForm 
+      <ControlledModalForm 
         values={values}
         setValues={setValues} 
         type={type} 
@@ -129,5 +94,5 @@ function SensorWrapper({type, reset, name, change, saved}) {
   );
 }
 
-export default SensorWrapper;
+export default ControlledWrapper;
 

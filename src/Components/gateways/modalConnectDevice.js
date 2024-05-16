@@ -5,7 +5,7 @@ import Modal from 'react-bootstrap/Modal';
 import Badge from 'react-bootstrap/Badge';
 import Alert from 'react-bootstrap/Alert';
 
-function ModalConnectDevice({gatewayID, change, saved}) {
+function ModalConnectDevice({mode, gatewayID, gatewayType, gatewayDevices, change, saved}) {
 
   const [show, setShow] = useState(false);
 
@@ -73,7 +73,7 @@ function ModalConnectDevice({gatewayID, change, saved}) {
   };
 
   async function connectDevice() {   
-    if(device.id !== '' && device.distance != 0)
+    if(device.id !== '' && (device.distance != 0|| gatewayType == 'ethernet'))
     {
       if(await fetchConnect()) {
         handleSave();
@@ -113,11 +113,24 @@ function ModalConnectDevice({gatewayID, change, saved}) {
 
   return (
     <>
-      <Button variant="outline-success" onClick={handleShow}>
-        Подключить устройство
-      </Button>
+      {mode && (
+        <Button variant="outline-success" onClick={handleShow}>
+          Подключить устройство
+        </Button>
+      )}
+      {!mode && (
+        <div className="d-grid gap-2">
+          <Button
+            style={{ fontSize: "20px" }}
+            variant="outline-success"
+            onClick={handleShow}
+          >
+            +
+          </Button>
+        </div>
+      )}
 
-      <Modal size="lg" show={show} onHide={handleClose}>
+      <Modal size="md" show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Подключение устройства</Modal.Title>
         </Modal.Header>
@@ -141,38 +154,44 @@ function ModalConnectDevice({gatewayID, change, saved}) {
                   <option value=""> - </option>
 
                   {devices.map((device) => (
-                    <option value={device.id}>
+                    <option
+                      disabled={
+                        gatewayDevices.find((item) => item.id === device.id) &&
+                        true
+                      }
+                      value={device.id}
+                    >
                       {device.name} <p>Protocol: {device.physicalProtocol}</p>
                     </option>
                   ))}
                 </Form.Select>
               </Form.Group>
-              <Form.Group>
-              <Form.Label>Расстояние до устройства</Form.Label>
-                <Form.Control
-                  required
-                  type="number"
-                  placeholder="метры"
-                  name="distance"
-                  value={device.distance}
-                  onChange={handleChange}
-                  min="1"
-                />
-                <Form.Control.Feedback type="invalid">
-                  Укажите расстояние!
-                </Form.Control.Feedback>
-              </Form.Group>
+              {console.log(gatewayType)}
+              {gatewayType != 'ethernet' && (
+                <Form.Group>
+                  <Form.Label>Расстояние до устройства</Form.Label>
+                  <Form.Control
+                    required
+                    type="number"
+                    placeholder="метры"
+                    name="distance"
+                    value={device.distance}
+                    onChange={handleChange}
+                    min="1"
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    Укажите расстояние!
+                  </Form.Control.Feedback>
+                </Form.Group>
+              )}
             </Form>
           )}
           {error !== null && (
             <Alert variant="danger" onClose={() => setError(null)} dismissible>
-            <Alert.Heading>Произошла ошибка при подключении</Alert.Heading>
-              <p>
-                {error}
-              </p>
-          </Alert>
+              <Alert.Heading>Произошла ошибка при подключении</Alert.Heading>
+              <p>{error}</p>
+            </Alert>
           )}
-          
         </Modal.Body>
         {!isEmpty && (
           <Modal.Footer>

@@ -32,21 +32,15 @@ const Sidebar = () => {
         <CDBSidebarContent className="sidebar-content">
           <CDBSidebarMenu>
             <NavLink exact to="/" activeClassName="activeClicked">
-              <CDBSidebarMenuItem icon="terminal" iconType="solid"> Устройства</CDBSidebarMenuItem>
+              <CDBSidebarMenuItem icon="network-wired"> Устройства</CDBSidebarMenuItem>
             </NavLink>
             <NavLink exact to="/gateways" activeClassName="activeClicked">
-              <CDBSidebarMenuItem icon="table">Tables</CDBSidebarMenuItem>
+              <CDBSidebarMenuItem icon="wifi">Шлюзы</CDBSidebarMenuItem>
             </NavLink>
             <NavLink exact to="/settings" activeClassName="activeClicked">
               <CDBSidebarMenuItem icon="user">Настройки</CDBSidebarMenuItem>
             </NavLink>
-            <NavLink exact to="/analytics" activeClassName="activeClicked">
-              <CDBSidebarMenuItem icon="chart-line">Analytics</CDBSidebarMenuItem>
-            </NavLink>
 
-            <NavLink exact to="/hero404" target="_blank" activeClassName="activeClicked">
-              <CDBSidebarMenuItem icon="exclamation-circle">404 page</CDBSidebarMenuItem>
-            </NavLink>
           </CDBSidebarMenu>
         </CDBSidebarContent>
 

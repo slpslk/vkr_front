@@ -1,18 +1,28 @@
 import React,{ useState, useEffect, useRef } from 'react';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-import ModalSettings from './modalSettings.js';
+import ModalSettings from './sensors/modalSettings.js';
 import CardSubtitle from 'react-bootstrap/esm/CardSubtitle.js';
 
-function DeviceCard({device, error}) {
+function DeviceCard({device, error, change, saved, deleted}) {
 
   const notations = {
     temperature: "°",
     humidity: "%",
     lighting: "лк"
   }
+
+
   const [isLoading, setIsLoading] = useState(false);
-  const [isDisabled, setIsDisabled] = useState(true);
+  const [deviceKind, setDeviceKind] = useState(() => {
+    if (device.type == 'temperature' || device.type == 'humidity' || device.type == 'gas' || device.type == 'lighting' ) {
+      return 'sensor'
+    }
+    else if (device.type == 'lamp'){
+      return 'controlled'
+    }
+  });
+  const [controlledStatus, setControlledStatus] = useState(false);
   const [deviceIsWorking, setDeviceIsWorking] = useState(false);
   const [currentValue, setCurrentValue] = useState();
   const intervalID = useRef(0)
@@ -33,6 +43,9 @@ function DeviceCard({device, error}) {
 
     const data = await response.json();
     if(response.ok){
+      if(deviceIsWorking) {
+        setControlledStatus(false);
+      }
       setDeviceIsWorking(!deviceIsWorking)
       setIsLoading(false);
     }
@@ -64,9 +77,29 @@ function DeviceCard({device, error}) {
       error(data.error)
       setIsLoading(false);
     }
-    }, 5000)
+    }, 5000) 
+  }
 
-    
+  async function fetchControlledTurning() {
+
+    const response = await fetch(`http://localhost:8000/api/devices/${device.id}/turn`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          status: !controlledStatus
+        }),
+      }
+    );
+
+    const data = await response.json();
+    if(response.ok){
+      setControlledStatus(!controlledStatus)
+    }
+    else {
+      error(data.error)
+    }
   }
   
   async function fetchCurrentValue(refreshingFetch) {
@@ -137,6 +170,10 @@ function DeviceCard({device, error}) {
     await turnOnDevice()
   };
 
+  const handlePower = async () => {
+    await fetchControlledTurning()
+  }
+
 
   return (
     <Card style={{ width: '18rem' }}>
@@ -151,15 +188,25 @@ function DeviceCard({device, error}) {
               {deviceIsWorking ? "Онлайн" :"Офлайн"}
             </Card.Subtitle>
           </div>
-          {deviceIsWorking && 
+          {deviceIsWorking && deviceKind == "sensor" &&
             <div className="deviceValue">
               {currentValue}{notations[device.type]}
             </div>
           }
+          {deviceKind == "controlled" && 
+            <Button 
+              disabled={!deviceIsWorking}
+              className="rounded-circle powerButton" 
+              variant={controlledStatus ? "outline-danger" : "outline-success"}
+              onClick={handlePower}
+            >
+              <i class=" fa fa-power-off"></i>
+            </Button>
+          }
         </div>
           
         <div style={{  display: 'flex', justifyContent: 'flex-end' }}>
-          <ModalSettings />
+          <ModalSettings device={device} change={change} saved={saved} deleted={deleted}/>
           <Button 
             className="ms-2"
             variant={deviceIsWorking ? "danger" : "success"}
@@ -168,7 +215,6 @@ function DeviceCard({device, error}) {
             {!deviceIsWorking && 'Включить'}
             {deviceIsWorking && 'Отключить'}
           </Button>
-          {/* <Button onClick={test}>Try fetch</Button> */}
         </div>
       </Card.Body>
       }

@@ -5,18 +5,24 @@ import Modal from 'react-bootstrap/Modal';
 
 function ModalDevice(props) {
   const [show, setShow] = useState(false);
+  const setParams = props.method
 
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    setShow(false);
+    setValues({
+      name: "",
+      type: "temperature",
+    })
+  }
   const handleShow = () => setShow(true);
 
-  const setParams = props.method
   const nameRegExp = new RegExp('^[\\p{L}\\d_]+$', 'u');
 
   const [validated, setValidated] = useState(false);
   const [values, setValues] = useState({
     name: "",
     type: "temperature",
-});
+  });
 
   const handleChange= (event) => {
     const { name, value } = event.target;

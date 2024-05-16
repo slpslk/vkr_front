@@ -68,7 +68,7 @@ function GatewaysPage() {
         <Row>
             {gateways.map((curr) => (
               <Col className="mb-3">
-                <GatewayCard gateway={curr} deleted={deleteGateway} />
+                <GatewayCard gateway={curr} deleted={deleteGateway} change={gatewaysIsChanged} saved={setIsChanged}/>
               </Col>
             ))}
         </Row>

@@ -1,5 +1,5 @@
 import Sidebar from "../Components/Sidebar.js";
-import GatewaysPage from "../Components/gatewaysPage.js";
+import GatewaysPage from "../Components/gateways/gatewaysPage.js";
 
 const Gateways = () => {
   return (

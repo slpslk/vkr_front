@@ -7,15 +7,17 @@ import Modal from 'react-bootstrap/Modal';
 import SensorFormChangable from './sensorFormChangableFields.js';
 
 
-function SensorModalForm({values, setValues, type, handleSubmit}) {
-  const [show, setShow] = useState(true); //отображение
+function SensorModalForm({id, values, setValues, type, mode, handleSubmit, deleted}) {
+  const [show, setShow] = useState(mode !== 'settings'); //отображение
 
   const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   const headers = {
     temperature: "Датчик температуры",
     humidity: "Датчик влажности",
-    lighting: "Датчик освещенности"
+    lighting: "Датчик освещенности",
+    gas: "Датчик газа"
   }
 
   const [meanErrorChecked, setErrorChecked] = useState(false);
@@ -123,23 +125,49 @@ function SensorModalForm({values, setValues, type, handleSubmit}) {
     return true;
   }
 
+  async function deleteDevice() {
+
+    const response = await fetch(`http://localhost:8000/api/devices`, {
+      method: "DELETE",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        deviceID: id
+      })
+    });
+
+      const rawData = await response.json();
+      console.log(rawData);
+
+  }
+
+  const handleDelete = async () => {
+    await deleteDevice();
+    deleted(id);
+    handleClose();
+  };
 
   //сабмит
-  const handleFormSubmit = (event) => {
+  const handleFormSubmit = () => {
     
     setValidated(true);
 
     if(checkFetchData()) {// запись параметров в пропсы
       // setSubmit(!submit)
       handleSubmit()
-      console.log("валидировано")
-      // handleClose();
+      // console.log("валидировано")
+      handleClose();
     }
-    console.log(values)
+    // console.log(values)
   };
 
   return (
     <>
+      {mode == 'settings' && 
+        <Button variant="outline-secondary" onClick={handleShow}>Настроить</Button>
+      }
+
       <Modal size="lg" show={show} onHide={handleClose}>
             <Modal.Header closeButton>
               <Modal.Title>{headers[type]}</Modal.Title>
@@ -335,14 +363,14 @@ function SensorModalForm({values, setValues, type, handleSubmit}) {
                     <Form.Group className="mb-3" controlId="devicebroker">
                       <Form.Label>Используемый брокер</Form.Label>
                       <Form.Select                      
-                        name="protocolPhysical"
-                        // value={values.protocolPhysical}
-                        // onChange={handleChange}
+                        name="broker"
+                        value={values.broker}
+                        onChange={handleChange}
                       >
                         <option value="rightech">
                           Rightech
                         </option>
-                        <option disabled value="personal">
+                        <option value="personal">
                           Персональный брокер
                         </option>
                       </Form.Select>
@@ -472,11 +500,16 @@ function SensorModalForm({values, setValues, type, handleSubmit}) {
               </Form>
             </Modal.Body>
             <Modal.Footer>
+              {mode == 'settings' && 
+                <Button variant="danger" onClick={handleDelete}>
+                  Удалить
+                </Button>
+              }
               <Button variant="secondary" onClick={handleClose}>
                 Отмена
               </Button>
-              <Button variant="primary" type="submit" onClick={handleFormSubmit}>
-                Создать
+              <Button variant="primary" disabled={mode !== 'settings' ? false : true} type="submit" onClick={handleFormSubmit}>
+                {mode !== 'settings' ? 'Создать' : 'Сохранить'}
               </Button>
             </Modal.Footer>
       </Modal>
