@@ -1,70 +1,22 @@
-# Getting Started with Create React App
+## Дипломная работа "Разработка виртуального стенда для изучения систем интернета вещей" (фронт)
+Проект представляет собой виртуальный стенд с устройствами интернета вещей, который позволяет создавать, настраивать и запускать в работу виртуальные устройства. 
+В интерфейсной части реализованы следующие функциональные возможности:
+- Авторизация и регистрация
+- Отображение актуальной информации об созданных пользователем устройствах и шлюзах
+- Отображение состояния устройств
+- Настройка работы с Rightech IOT Cloud / настройка пользовательского брокера
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+Стек frontend части прокта:
+- React
+- React-Bootstrap
+- Redux
 
-In the project directory, you can run:
+Скриншоты приложения:
 
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+![image](https://github.com/slpslk/vkr_front/assets/134289156/36d66131-54b3-4f48-8380-6dca5e98443b)
+![image](https://github.com/slpslk/vkr_front/assets/134289156/9c8139f4-29a3-42ac-8e95-c3bf75ea82fd)
+![image](https://github.com/slpslk/vkr_front/assets/134289156/505c13e8-b736-4e4f-90af-1118c53d5c74)
+![image](https://github.com/slpslk/vkr_front/assets/134289156/3fc21dba-06c8-4578-a460-9db4b73573a7)
+![image](https://github.com/slpslk/vkr_front/assets/134289156/217ab89e-9a4c-4506-b98d-945b448289e5)
+![image](https://github.com/slpslk/vkr_front/assets/134289156/a5f01958-2d46-4c83-b4ec-d06227aad16f)
