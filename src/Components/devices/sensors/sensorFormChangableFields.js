@@ -11,6 +11,7 @@ function SensorFormChangable({values, handleChange, type}) {
   const contentTypes = {
     range: ["temperature", "humidity", "lighting", "gas", "noise"],
     error: ["temperature", "humidity", "lighting", "gas", "noise"],
+    permissibleLevel: ["noise"],
     gasType: ["gas"],
     lightIndication: ["gas", "motion", "magnet"],
     soundIndication: ["gas", "motion", "magnet"],
@@ -20,6 +21,7 @@ function SensorFormChangable({values, handleChange, type}) {
   let fieldsOfType = {
     range: false,
     error: false,
+    permissibleLevel: false,
     gasType: false,
     lightIndication: false,
     soundIndication: false,
@@ -30,7 +32,7 @@ function SensorFormChangable({values, handleChange, type}) {
     temperature: "C°",
     humidity: "%",
     lighting: "люкс",
-    
+    noise: "дБА"
   }
 
   const makeFields = () => {
@@ -130,6 +132,27 @@ function SensorFormChangable({values, handleChange, type}) {
             />
             <Form.Control.Feedback type="invalid">
               Укажите погрешность!
+            </Form.Control.Feedback>
+          </Col>
+        </Form.Group>
+      )}
+      {fieldsOfType.permissibleLevel && (
+        <Form.Group as={Row} className="mb-3">
+          <Form.Label column sm="4 ">
+            Допустимый уровень шума:
+          </Form.Label>
+          <Col sm="8">
+            <Form.Control
+              required
+              type="number"
+              placeholder={`${notations[type]}`}
+              name="permissibleValue"
+              value={values.permissibleValue}
+              onChange={handleChange}
+              min="0"
+            />
+            <Form.Control.Feedback type="invalid">
+              Укажите уровень шума!
             </Form.Control.Feedback>
           </Col>
         </Form.Group>

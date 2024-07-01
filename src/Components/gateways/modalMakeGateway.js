@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
-
+import { useAuth } from '../../hooks/use-auth';
 //TODO: очищение формы и значений
 
 function ModalGateway({mode, change, saved}) {
+
+  const {token} = useAuth();
 
   const [show, setShow] = useState(false);
 
@@ -91,6 +93,7 @@ function ModalGateway({mode, change, saved}) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "authorization": `Bearer ${token}`
         },
         body: JSON.stringify({
           name: values.name,

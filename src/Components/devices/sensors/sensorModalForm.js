@@ -5,9 +5,11 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Modal from 'react-bootstrap/Modal';
 import SensorFormChangable from './sensorFormChangableFields.js';
+import { useAuth } from '../../../hooks/use-auth.js';
 
 
 function SensorModalForm({id, values, setValues, type, mode, handleSubmit, deleted}) {
+  const {token} = useAuth();
   const [show, setShow] = useState(mode !== 'settings'); //отображение
 
   const handleClose = () => setShow(false);
@@ -17,7 +19,7 @@ function SensorModalForm({id, values, setValues, type, mode, handleSubmit, delet
     temperature: "Датчик температуры",
     humidity: "Датчик влажности",
     lighting: "Датчик освещенности",
-    gas: "Датчик газа"
+    noise: "Датчик шума"
   }
 
   const [meanErrorChecked, setErrorChecked] = useState(false);
@@ -131,6 +133,7 @@ function SensorModalForm({id, values, setValues, type, mode, handleSubmit, delet
       method: "DELETE",
       headers: {
         'Content-Type': 'application/json',
+        "authorization": `Bearer ${token}`
       },
       body: JSON.stringify({
         deviceID: id

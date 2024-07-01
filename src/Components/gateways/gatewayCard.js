@@ -1,13 +1,13 @@
-import React,{ useState, useEffect, version } from 'react';
+import React,{ useState} from 'react';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-// import ModalSettings from './modalSettings.js';
 import ModalGatewaySettings from './modalGatewaySettings.js';
+import { useAuth } from '../../hooks/use-auth.js';
 
 function GatewayCard({gateway, deleted, change, saved}) {
 
+  const {token} = useAuth();
   const [isLoading, setIsLoading] = useState(false);
-
 
   async function deleteGateway() {
     setIsLoading(true);
@@ -15,6 +15,7 @@ function GatewayCard({gateway, deleted, change, saved}) {
       method: "DELETE",
       headers: {
         'Content-Type': 'application/json',
+        "authorization": `Bearer ${token}`
       },
       body: JSON.stringify({
         gatewayID: gateway.id

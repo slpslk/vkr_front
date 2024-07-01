@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import SensorModalForm from './sensorModalForm.js';
+import { useAuth } from '../../../hooks/use-auth.js';
 
 
-function SensorWrapper({type, reset, name, change, saved}) {
+function SensorWrapper({type, reset, name, change, saved, error}) {
 
+  const {token} = useAuth();
   const typeValues = {
     temperature: {
       min: '',
@@ -23,12 +25,12 @@ function SensorWrapper({type, reset, name, change, saved}) {
       operatingRange: '',
       error: '',
     },
-    gas : {
+    noise : {
       min: '',
       max: '',
       operatingRange: '',
       error: '',
-      gasType: '',
+      permissibleValue: ''
     },
   }
 
@@ -68,6 +70,7 @@ function SensorWrapper({type, reset, name, change, saved}) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "authorization": `Bearer ${token}`
         },
         body: JSON.stringify({
           name: values.name,
@@ -85,6 +88,7 @@ function SensorWrapper({type, reset, name, change, saved}) {
             error: values.error,
             opRange: values.operatingRange,
           },
+          permissibleValue: values.permissibleValue,
           sendingPeriod: values.sendingPeriod,
           connectionOptions: {
             clientId: values.ClientID, 
@@ -99,6 +103,14 @@ function SensorWrapper({type, reset, name, change, saved}) {
     );
 
     const data = await response.json();
+
+    if(response.ok) {
+      handleCreating()
+    }
+    else {
+      console.log(data)
+      error(data.error);
+    }
   }
 
 
@@ -110,12 +122,9 @@ function SensorWrapper({type, reset, name, change, saved}) {
     })
   }
 
-  //сделать async
-  const handleSubmit = () => {
 
-// запись параметров в пропсы
-    fetchMakeSensor();
-    handleCreating();     
+  const handleSubmit = async () => {
+    await fetchMakeSensor();  
     console.log(values)
   };
 

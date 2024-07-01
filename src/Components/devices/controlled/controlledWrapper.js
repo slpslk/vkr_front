@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import ControlledModalForm from './controlledModalForm.js';
+import { useAuth } from '../../../hooks/use-auth.js';
 
+function ControlledWrapper({type, reset, name, change, saved, error}) {
 
-function ControlledWrapper({type, reset, name, change, saved}) {
-
+  const {token} = useAuth();
   const typeValues = {
     
   }
@@ -33,6 +34,7 @@ function ControlledWrapper({type, reset, name, change, saved}) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "authorization": `Bearer ${token}`
         },
         body: JSON.stringify({
           name: values.name,
@@ -56,6 +58,13 @@ function ControlledWrapper({type, reset, name, change, saved}) {
     );
 
     const data = await response.json();
+
+    if(response.ok) {
+      handleCreating()
+    }
+    else {
+      error(data.error);
+    }
   }
 
 
@@ -68,11 +77,8 @@ function ControlledWrapper({type, reset, name, change, saved}) {
   }
 
   //сделать async
-  const handleSubmit = () => {
-
-// запись параметров в пропсы
-    fetchMakeControlled();
-    handleCreating();     
+  const handleSubmit = async () => {
+    await fetchMakeControlled();  
     console.log(values)
   };
 

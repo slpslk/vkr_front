@@ -1,12 +1,12 @@
-import { useEffect, useLayoutEffect, useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import Modal from 'react-bootstrap/Modal';
+import { useEffect, useState } from 'react';
 import SensorModalForm from './sensorModalForm.js';
+import { useAuth } from '../../../hooks/use-auth.js';
 
 const FROM_MILISECONDS = 60000;
 
 function ModalSettings({device, change, saved, deleted}) {
+
+  const {token} = useAuth();
   
   let currentData = {
     name: device.name,
@@ -55,6 +55,7 @@ function ModalSettings({device, change, saved, deleted}) {
       method: "PATCH",
       headers: {
         'Content-Type': 'application/json',
+        "authorization": `Bearer ${token}`
       },
       body: JSON.stringify(fetchData)
     });

@@ -2,20 +2,22 @@ import React,{ useState, useEffect, useRef } from 'react';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import ModalSettings from './sensors/modalSettings.js';
-import CardSubtitle from 'react-bootstrap/esm/CardSubtitle.js';
+import { useAuth } from '../../hooks/use-auth.js';
 
 function DeviceCard({device, error, change, saved, deleted}) {
 
+  const {token} = useAuth();
+  
   const notations = {
     temperature: "°",
     humidity: "%",
-    lighting: "лк"
+    lighting: "лк",
+    noise: "дБА",
   }
-
 
   const [isLoading, setIsLoading] = useState(false);
   const [deviceKind, setDeviceKind] = useState(() => {
-    if (device.type == 'temperature' || device.type == 'humidity' || device.type == 'gas' || device.type == 'lighting' ) {
+    if (device.type == 'temperature' || device.type == 'humidity' || device.type == 'noise' || device.type == 'lighting' ) {
       return 'sensor'
     }
     else if (device.type == 'lamp'){
@@ -24,6 +26,7 @@ function DeviceCard({device, error, change, saved, deleted}) {
   });
   const [controlledStatus, setControlledStatus] = useState(false);
   const [deviceIsWorking, setDeviceIsWorking] = useState(false);
+  const [deviceAlarm, setDeviceAlarm] = useState(true);
   const [currentValue, setCurrentValue] = useState();
   const intervalID = useRef(0)
   
@@ -34,6 +37,7 @@ function DeviceCard({device, error, change, saved, deleted}) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "authorization": `Bearer ${token}`
         },
         body: JSON.stringify({
           control: !deviceIsWorking
@@ -63,6 +67,7 @@ function DeviceCard({device, error, change, saved, deleted}) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "authorization": `Bearer ${token}`
         },  
       }
     );
@@ -86,6 +91,7 @@ function DeviceCard({device, error, change, saved, deleted}) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "authorization": `Bearer ${token}`
         },
         body: JSON.stringify({
           status: !controlledStatus
@@ -106,12 +112,16 @@ function DeviceCard({device, error, change, saved, deleted}) {
     const response = await fetch(`http://localhost:8000/api/devices/${device.id}`, {
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        "authorization": `Bearer ${token}`
       },
     
       });
       const data = await response.json();
       console.log("timer fetch")
+
+      setDeviceAlarm(data.alarm)
+
       console.log(deviceIsWorking)
       console.log(data.online)
       console.log(refreshingFetch)
@@ -150,11 +160,8 @@ function DeviceCard({device, error, change, saved, deleted}) {
       }, device.sendingPeriod);
       console.log(intervalID.current)
     }
-    // else {
-    //   console.log("стоп интервал else")
-    //   clearInterval(intervalID.current);
-    //   intervalID.current = 0;
-    // }
+
+
     
     return () => {
       console.log("стоп интервал return")
@@ -189,7 +196,7 @@ function DeviceCard({device, error, change, saved, deleted}) {
             </Card.Subtitle>
           </div>
           {deviceIsWorking && deviceKind == "sensor" &&
-            <div className="deviceValue">
+            <div className="deviceValue" style={deviceAlarm? {color: '#dc3545'}: {color: 'black'}}>
               {currentValue}{notations[device.type]}
             </div>
           }

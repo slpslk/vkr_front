@@ -4,14 +4,18 @@ import Row from 'react-bootstrap/Row';
 import Stack from 'react-bootstrap/Stack';
 import ModalGateway from './modalMakeGateway.js';
 import GatewayCard from './gatewayCard.js';
+import Spinner from 'react-bootstrap/Spinner';
+import { useAuth } from '../../hooks/use-auth.js';
 
 //TODO: открывание окна создания шлюза заново
 //TODO: передавать isempty в карточки, чтобы отслеживать пустой массив....
 
 function GatewaysPage() {
 
+  const {token} = useAuth();
+  
   const [gateways, setGateways] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [gatewaysIsEmpty, setGatewaysIsEmpty] = useState(true);
   const [gatewaysIsChanged, setIsChanged] = useState(false);
 
@@ -20,6 +24,7 @@ function GatewaysPage() {
     const response = await fetch('http://localhost:8000/api/gateways', {
       headers: {
         'Content-Type': 'application/json',
+        "authorization": `Bearer ${token}`
       }
     });
 
@@ -56,24 +61,43 @@ function GatewaysPage() {
 
   return (
     <>
-      {isLoading && <div>Loading...</div>}
+      {isLoading && (
+        <div className='centeredMain'>
+          <Spinner variant="primary" animation="border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+        </div>
+      )}
       {!isLoading && gatewaysIsEmpty && (
         <div className="empty">
           Вы не создали ни одного шлюза
-          <ModalGateway mode={gatewaysIsEmpty} change={gatewaysIsChanged} saved={setIsChanged} />
+          <ModalGateway
+            mode={gatewaysIsEmpty}
+            change={gatewaysIsChanged}
+            saved={setIsChanged}
+          />
         </div>
       )}
       {!isLoading && !gatewaysIsEmpty && (
         <>
-        <Row>
+          <Row>
             {gateways.map((curr) => (
               <Col className="mb-3">
-                <GatewayCard gateway={curr} deleted={deleteGateway} change={gatewaysIsChanged} saved={setIsChanged}/>
+                <GatewayCard
+                  gateway={curr}
+                  deleted={deleteGateway}
+                  change={gatewaysIsChanged}
+                  saved={setIsChanged}
+                />
               </Col>
             ))}
-        </Row>
+          </Row>
 
-        <ModalGateway mode={gatewaysIsEmpty} change={gatewaysIsChanged} saved={setIsChanged} />
+          <ModalGateway
+            mode={gatewaysIsEmpty}
+            change={gatewaysIsChanged}
+            saved={setIsChanged}
+          />
         </>
       )}
     </>

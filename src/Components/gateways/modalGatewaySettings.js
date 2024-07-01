@@ -8,9 +8,13 @@ import Stack from 'react-bootstrap/Stack';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import ModalConnectDevice from './modalConnectDevice.js';
+import { useAuth } from '../../hooks/use-auth';
 
 
 function ModalGatewaySettings({gateway, change, saved}) {
+
+  const {token} = useAuth();
+  
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -51,6 +55,7 @@ function ModalGatewaySettings({gateway, change, saved}) {
     const response = await fetch(`http://localhost:8000/api/gateways/${gateway.id}/devices`, {
       headers: {
         'Content-Type': 'application/json',
+        "authorization": `Bearer ${token}`
       }
     });
 
@@ -67,6 +72,7 @@ function ModalGatewaySettings({gateway, change, saved}) {
       method: "DELETE",
       headers: {
         'Content-Type': 'application/json',
+        "authorization": `Bearer ${token}`
       },
       body: JSON.stringify({
         deviceID: deviceId
@@ -84,6 +90,7 @@ function ModalGatewaySettings({gateway, change, saved}) {
       method: "PATCH",
       headers: {
         'Content-Type': 'application/json',
+        "authorization": `Bearer ${token}`
       },
       body: JSON.stringify(changedData)
     });

@@ -290,14 +290,12 @@ function ControlledModalForm({id, values, setValues, type, mode, handleSubmit, d
                 <Form.Group className="mb-3" controlId="devicebroker">
                   <Form.Label>Используемый брокер</Form.Label>
                   <Form.Select
-                    name="protocolPhysical"
-                    // value={values.protocolPhysical}
-                    // onChange={handleChange}
+                    name="broker"
+                    value={values.broker}
+                    onChange={handleChange}
                   >
                     <option value="rightech">Rightech</option>
-                    <option disabled value="personal">
-                      Персональный брокер
-                    </option>
+                    <option value="personal">Персональный брокер</option>
                   </Form.Select>
                 </Form.Group>
                 <Form.Group as={Row} className="mb-3" controlId="mqttparamsid">
@@ -400,7 +398,6 @@ function ControlledModalForm({id, values, setValues, type, mode, handleSubmit, d
                       Введите корректное число!
                     </Form.Control.Feedback> */}
                 </Form.Group>
-                
               </>
             )}
             {values.protocolMessage == "HTTP" && (

@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
-import Badge from 'react-bootstrap/Badge';
 import Alert from 'react-bootstrap/Alert';
+import { useAuth } from '../../hooks/use-auth';
 
 function ModalConnectDevice({mode, gatewayID, gatewayType, gatewayDevices, change, saved}) {
+
+  const {token} = useAuth();
 
   const [show, setShow] = useState(false);
 
@@ -30,6 +32,7 @@ function ModalConnectDevice({mode, gatewayID, gatewayType, gatewayDevices, chang
     const response = await fetch('http://localhost:8000/api/devices', {
       headers: {
         'Content-Type': 'application/json',
+        "authorization": `Bearer ${token}`
       }
     });
 
@@ -45,6 +48,7 @@ function ModalConnectDevice({mode, gatewayID, gatewayType, gatewayDevices, chang
       method: "POST",
       headers: {
         'Content-Type': 'application/json',
+        "authorization": `Bearer ${token}`
       },
       body: JSON.stringify({
         deviceID: device.id,
@@ -187,7 +191,7 @@ function ModalConnectDevice({mode, gatewayID, gatewayType, gatewayDevices, chang
             </Form>
           )}
           {error !== null && (
-            <Alert variant="danger" onClose={() => setError(null)} dismissible>
+            <Alert className='mt-3'variant="danger" onClose={() => setError(null)} dismissible>
               <Alert.Heading>Произошла ошибка при подключении</Alert.Heading>
               <p>{error}</p>
             </Alert>
